@@ -23,6 +23,7 @@ import { I18nextProvider, initReactI18next, useTranslation } from 'react-i18next
 import { getURL } from '../../app/utils/client';
 import { i18n } from '../../app/utils/lib/i18n';
 import { AppClientOrchestratorInstance } from '../apps/orchestrator';
+import { getDefaultLanguageOption } from './lib/getDefaultLanguageOption';
 import { onLoggedIn } from '../lib/loggedIn';
 import { isRTLScriptLanguage } from '../lib/utils/isRTLScriptLanguage';
 
@@ -195,14 +196,9 @@ const TranslationProvider = ({ children }: TranslationProviderProps): ReactEleme
 	const i18nextInstance = useI18next(language);
 	useCustomTranslations(i18nextInstance);
 
-	const availableLanguages = useMemo(
-		() => [
-			{
-				en: 'Default',
-				name: i18nextInstance.t('Default'),
-				ogName: i18nextInstance.t('Default'),
-				key: '',
-			},
+	const availableLanguages = useMemo(() => {
+		return [
+			getDefaultLanguageOption(i18nextInstance, language),
 			...[...new Set([...i18nextInstance.languages, ...languages])]
 				.map((key) => ({
 					en: key,
@@ -211,9 +207,8 @@ const TranslationProvider = ({ children }: TranslationProviderProps): ReactEleme
 					key,
 				}))
 				.sort(({ name: nameA }, { name: nameB }) => nameA.localeCompare(nameB)),
-		],
-		[language, i18nextInstance],
-	);
+		];
+	}, [language, i18nextInstance]);
 
 	useEffect(() => {
 		if (moment.locales().includes(language.toLowerCase())) {
