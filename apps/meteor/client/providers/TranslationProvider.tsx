@@ -246,9 +246,7 @@ const TranslationProvider = ({ children }: TranslationProviderProps): ReactEleme
 
 	return (
 		<I18nextProvider i18n={i18nextInstance}>
-			<ReactAriaI18nProvider locale={i18nextInstance.resolvedLanguage ?? language}>
-				<TranslationProviderInner availableLanguages={availableLanguages}>{children}</TranslationProviderInner>
-			</ReactAriaI18nProvider>
+			<TranslationProviderInner availableLanguages={availableLanguages}>{children}</TranslationProviderInner>
 		</I18nextProvider>
 	);
 };
@@ -289,7 +287,11 @@ const TranslationProviderInner = ({
 		[availableLanguages, i18n, t],
 	);
 
-	return <TranslationContext.Provider value={value}>{children}</TranslationContext.Provider>;
+	return (
+		<ReactAriaI18nProvider locale={i18n.resolvedLanguage ?? i18n.language}>
+			<TranslationContext.Provider value={value}>{children}</TranslationContext.Provider>
+		</ReactAriaI18nProvider>
+	);
 };
 
 export default TranslationProvider;
