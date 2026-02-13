@@ -23,7 +23,6 @@ import { I18nextProvider, initReactI18next, useTranslation } from 'react-i18next
 import { getURL } from '../../app/utils/client';
 import { i18n } from '../../app/utils/lib/i18n';
 import { AppClientOrchestratorInstance } from '../apps/orchestrator';
-import { getDefaultLanguageOption } from './lib/getDefaultLanguageOption';
 import { onLoggedIn } from '../lib/loggedIn';
 import { isRTLScriptLanguage } from '../lib/utils/isRTLScriptLanguage';
 
@@ -197,8 +196,16 @@ const TranslationProvider = ({ children }: TranslationProviderProps): ReactEleme
 	useCustomTranslations(i18nextInstance);
 
 	const availableLanguages = useMemo(() => {
+		const translateInLanguage = i18nextInstance.getFixedT(language);
+		const defaultTranslation = translateInLanguage('Default');
+
 		return [
-			getDefaultLanguageOption(i18nextInstance, language),
+			{
+				en: 'Default',
+				name: defaultTranslation,
+				ogName: defaultTranslation,
+				key: '',
+			},
 			...[...new Set([...i18nextInstance.languages, ...languages])]
 				.map((key) => ({
 					en: key,
