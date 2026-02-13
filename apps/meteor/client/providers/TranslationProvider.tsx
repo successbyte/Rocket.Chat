@@ -1,3 +1,4 @@
+import { I18nProvider as ReactAriaI18nProvider } from '@react-aria/i18n';
 import { useLocalStorage } from '@rocket.chat/fuselage-hooks';
 import {
 	addSprinfToI18n,
@@ -245,7 +246,9 @@ const TranslationProvider = ({ children }: TranslationProviderProps): ReactEleme
 
 	return (
 		<I18nextProvider i18n={i18nextInstance}>
-			<TranslationProviderInner availableLanguages={availableLanguages}>{children}</TranslationProviderInner>
+			<ReactAriaI18nProvider locale={i18nextInstance.resolvedLanguage ?? language}>
+				<TranslationProviderInner availableLanguages={availableLanguages}>{children}</TranslationProviderInner>
+			</ReactAriaI18nProvider>
 		</I18nextProvider>
 	);
 };
